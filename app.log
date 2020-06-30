@@ -1,0 +1,4 @@
+example_logger - DEBUG - This will get logged
+example_logger - INFO - value of a is 1
+example_logger - INFO - value of a formatted 3.14200
+example_logger - WARNING - This is a warning

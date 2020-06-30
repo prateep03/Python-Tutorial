@@ -1,0 +1,4 @@
+to install mysql --> google "mysql installer", 
+url: https://dev.mysql.com/downloads/installer/
+download community edition
+"developer default", not needed requirements

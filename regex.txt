@@ -1,0 +1,25 @@
+.    - Any character except new line
+\d   - Digit (0-9)
+\D   - Not a Digit (0-9)
+\w   - Alphanumeric Character (a-z, A-Z, 0-9, _)
+\W   - Not a Word Character
+\s   - Whitespace (space, tab, newline)
+\S   - Not a whitespace (space, tab, newline)
+
+Anchors
+---------------------
+\b   - Word Boundary
+\B   - Not a Word Boundary
+^    - Beginning of a String
+$    - End of a String
+
+Meta characters need to be escaped
+. ^ $ * + { } [ ] \ | ( )
+
+[ ] -> character set
+( ) -> Group
+| -> Either or
+
++ - one or more occurrences
+? - zero or more occurrences
+
