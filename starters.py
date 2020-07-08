@@ -1,6 +1,55 @@
 # a = [1, 2, 3, 'tutorial'] # mutable
 # print(a)
 #
+
+# a = [1, 2, 3.142, 'python','anaconda','spyder']
+# print(type(a))
+# print(a[0],a[1],a[2])
+#
+# # a[0] = 'rabbit'
+# # print(a)
+#
+# a.append(1.414)
+# print(a)
+#
+# a.insert(1, -2)
+# print(a)
+#
+# b = a.pop(0)
+# print("Pop = ", a, b)
+#
+# print(len(a))
+# print(repr(a), type(repr(a)))
+#
+# b = [2, 3, 1]
+# # b.sort(reverse=True)
+# # b = sorted(b, reverse=False)
+# b.reverse()
+# print("B = ", b)
+
+# c = b.copy() # deep-copy
+#
+# print("id(b) = ", id(b))
+# print("id(c) = ", id(c))
+#
+# c[0] = 4
+# print("b = ",b)
+# print("c = ", c)
+#
+# empty = []
+# l = [empty] * 5
+# print(l)
+
+# l[1].append('python1')
+# l[1] = ['python1']
+# l[0].append('python2')
+# print(l)
+# print([id(ll) for ll in l])
+#
+# a = [0,1,2,3]
+# am = [i for i in range(4)]
+# print(a, am)
+
 # # Immutable and mutable
 # # block comment - Ctrl + /
 # # uncomment block - Ctrl + /
@@ -31,34 +80,34 @@
 # a.sort(reverse=True)
 # print(a)
 
-# Tuples
-# b = ('apple','orange')
-# print(b)
-# # print(type(b))
-#
-# # b[0] = 'kiwi'
-# # print(b[0])
-#
-# # if, else, elif
-# # if condition is True:
-# #    do this
-# # else:
-# #    do that
-# # if 'apple' not in b:
-# #     print('apple is there')
-# # else:
-# #     print('no')
-#
-# print(len(b))
-# bb = list(b)
-# bb.append('kiwi')
-# bb = tuple(bb)
-# print(bb)
+## Tuples
+b = ('apple','orange')
+print(b)
+# print(type(b))
 
-# Set
-c = {1, 2, 3, 'apple'}
-cc = {1, 2, 3}
-print(c)
+# b[0] = 'kiwi'
+# print(b[0])
+
+# if, else, elif
+# if condition is True:
+#    do this
+# else:
+#    do that
+# if 'apple' not in b:
+#     print('apple is there')
+# else:
+#     print('no')
+
+print(len(b))
+bb = list(b)
+bb.append('kiwi')
+bb = tuple(bb)
+print(bb)
+
+## Set
+# c = {1, 2, 3, 'apple'}
+# cc = {1, 2, 3}
+# print(c)
 #
 # # print(c[0]) # wrong
 #
@@ -73,7 +122,7 @@ print(c)
 #
 # print(c.difference(cc))
 
-# Dictionary - key-value pair
+## Dictionary - key-value pair
 # d = {'a': 1, 'b': 2}
 # print(len(d))
 #
@@ -101,7 +150,7 @@ print(c)
 # dd = list(d)
 # print(dd)
 
-# If-else
+## If-else
 # # ==, !=, >, >=, <, <= --> comparison operators
 # # ||(or), &&(and)--> comparison operators
 # # |, & --> bitwise operator
@@ -141,7 +190,7 @@ print(c)
 #
 # print("a is greater than b") if a > b else print("a is equal to b") if a == b else print("a is less than b") if a < b else print("")
 
-# Loops
+## Loops
 #  for, while
 
 # *
@@ -176,8 +225,3 @@ print(c)
 #
 # print("result2 {}".format(result2))
 #
-
-for num in [1, 2, 3, 4]:
-    print(num, end=' ')
-
-print()
