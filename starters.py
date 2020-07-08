@@ -81,12 +81,29 @@
 # print(a)
 
 ## Tuples
-b = ('apple','orange')
-print(b)
+# b = ('apple','orange',1,3)
+# print(b)
+# print(type(b))
+
+# b = tuple([1,2,3,4])
+# b = tuple(list((4,3,2,1)))
+# print(b)
 # print(type(b))
 
 # b[0] = 'kiwi'
 # print(b[0])
+
+# b2 = (b,5)
+# print(b2)
+
+# Do not use list initialization for tuple.
+#  - append
+#  - insert
+#  - pop
+# l = [4,3,2,1]
+# l.append(5)
+# c = tuple(l)
+# print("c = ",c,len(c))
 
 # if, else, elif
 # if condition is True:
@@ -98,57 +115,69 @@ print(b)
 # else:
 #     print('no')
 
-print(len(b))
-bb = list(b)
-bb.append('kiwi')
-bb = tuple(bb)
-print(bb)
+# print(len(b))
+# bb = list(b)
+# bb.append('kiwi')
+# bb = tuple(bb)
+# print(bb)
 
 ## Set
-# c = {1, 2, 3, 'apple'}
+# print("Sets ------------")
+#
+# c = {1, 2, "orange", 3, "apple"}
 # cc = {1, 2, 3}
-# print(c)
+# print("c = ",c)
 #
-# # print(c[0]) # wrong
+# # print(c[0]) # TypeError
 #
-# c.add('orange')
-# print(c)
+# lc = list(c)
+# print("lc = ",lc)
+# print("lc[0] = ",lc[0])
+#
+# c.add("lemon")
+# print("c = ", c)
 #
 # c.update(['kiwi','banana'])
+# print("c = ", c)
+#
+# c.remove('kiwi')
 # print(c)
 #
-# # c.remove('kiwii')
-# # print(c)
+# print('kiwii' not in c)
 #
-# print(c.difference(cc))
+# print(c.difference(cc)) # union, intersection
 
 ## Dictionary - key-value pair
-# d = {'a': 1, 'b': 2}
-# print(len(d))
+d = {'a': [1,3,4], 'b': 2}
+# print(d,len(d))
+
+# print(d.keys(),d.values(),d.items()) # iterators
+
+# for (k,v) in d.items():
+#     print(k,v)
+
+# if 'c' in d:
+#     print(d['c'])
+# else:
+#     print('Key not found')
 #
-# for k in d.iteritems():
-#     print(k)
-#
-# print(d['a'])
-#
-# # d['a'] = 3
+# d['a'] = 3
 # d['c'] = 4
 # print(d)
-#
-# print('a' in d)
-#
+
 # if 'c' in d:
 #     print(d['c'])
 # else:
 #     print('c doesn''t exist in d')
 #
+# print("original = ", d)
 # d.pop('b')
-# print(d)
-#
+# print("after = ", d)
+
 # print(type(d.values()))
-#
-# dd = list(d)
-# print(dd)
+
+# dd = list(d.items())
+# print(dd, type(dd))
 
 ## If-else
 # # ==, !=, >, >=, <, <= --> comparison operators
@@ -157,9 +186,9 @@ print(bb)
 #
 # # (x and y) is true iff x is true and y is true
 # # (x or y) is true if x is true or y is true
-# a = 3
-# b = 4
-# c = 2
+a = 3
+b = 4
+c = 2
 # # A
 # if a > b:
 #     print("a is greater than b")
@@ -169,14 +198,14 @@ print(bb)
 #     print("a is less than b")
 #
 # # B
-# if a > b:
-#     print("a is greater than b")
-# else:
-#     if a == b:
-#         print("a is equal to b")
-#     else:
-#         if a < b:
-#             print("a is less than b")
+if a > b:
+    print("a is greater than b")
+else:
+    if a == b:
+        print("a is equal to b")
+    else:
+        if a < b:
+            print("a is less than b")
 #
 # #
 # # if a == 3:
@@ -191,7 +220,7 @@ print(bb)
 # print("a is greater than b") if a > b else print("a is equal to b") if a == b else print("a is less than b") if a < b else print("")
 
 ## Loops
-#  for, while
+ # for, while
 
 # *
 # **
@@ -205,17 +234,27 @@ print(bb)
 
 # Add integers from 1 to 10
 # result = 1
-# for a in range(1,10):
-#     # print(a)
+# for a in range(10,0,-2):
+#     print(a)
 #     result = result * a
-#
-# result1 = 1
-# for a in range(1,10):
-#     # print(a)
-#     for b in range(1,a):
-#         result1 = result1 * b
-#
-# print("multiply {}".format(result))
+
+# a = 1
+# while a < 10:
+#     print(a)
+#     result = result * a
+#     a += 1
+
+# print(result)
+
+result1 = 1
+for a in range(1,10):
+    # print(a)
+    for b in range(1,a):
+        result1 = result1 * b
+
+print("multiply %3.2f" % result1)
+print("multiply {}".format(result1))
+print(f"multiply {result1}")
 
 # a = 1
 # result2 = 0
