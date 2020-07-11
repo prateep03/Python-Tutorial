@@ -69,7 +69,9 @@ def plot_vector(vectors, tails=None):
     >>> t = [[3, 2], [-1, -2], [3, 5]]
     >>> plot_vector(v, t)   # draw 3 vectors with 3 different tails
 
-    '''   
+    '''
+
+    print('hi')
     vectors = numpy.array(vectors)
     assert vectors.shape[1] == 2, "Each vector should have 2 elements."  
     if tails is not None:
