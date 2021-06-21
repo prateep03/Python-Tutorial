@@ -1,0 +1,7 @@
+
+
+gene-a=10
+gene-b=26
+gene-c=30
+gene-d=35
+gene-e=40
