@@ -5,28 +5,28 @@ import time
 tLock = Lock()
 
 def calc_square(nums):
-    tLock.acquire()
+#     tLock.acquire()
     print('Calculate square of nums')
     for num in nums:
         time.sleep(0.2)
         print('square:', num * num)
-    tLock.release()
+#     tLock.release()
 
 def calc_cube(nums):
-    tLock.acquire()
+#     tLock.acquire()
     print('Calculate cube of nums')
     for num in nums:
         time.sleep(0.2)
         print('cube:', num * num * num)
-    tLock.release()
+#     tLock.release()
 
 def calc_power_50(nums):
-    tLock.acquire()
+#     tLock.acquire()
     print('Calculate power 50 of nums')
     for num in nums:
         time.sleep(0.2)
         print('p50:', num ** 50)
-    tLock.release()
+#     tLock.release()
 
 # def timer(name, delay, repeat):
 #     print('Timer: ', name, ' Started')
@@ -49,11 +49,11 @@ def Main():
     nums = [2,3,8,9]
     #result = [4, 64, 9, 81]
 
-    # tstart = time.time()
-    # calc_square(nums)
-    # calc_cube(nums)
-    # calc_power_50(nums)
-    # print('Time taken :', time.time() - tstart)
+#     tstart = time.time()
+#     calc_square(nums)
+#     calc_cube(nums)
+#     calc_power_50(nums)
+#     print('Time taken :', time.time() - tstart)
 
     t1 = Thread(target=calc_square, args=(nums,))
     t2 = Thread(target=calc_cube, args=(nums,))
