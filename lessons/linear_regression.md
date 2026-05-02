@@ -339,3 +339,4 @@ model_scaled = LinearRegression().fit(X_scaled, y_train)
 <br><br>
 <b>Hint:</b> <code>residuals = y_test - y_pred_test</code>. Plot <code>plt.scatter(y_pred_test, residuals)</code> and draw a horizontal line at 0 with <code>plt.axhline(0)</code>. To apply the log transform: <code>y_log = np.log(y_boston)</code>, retrain, then evaluate using <code>np.exp(model.predict(...))</code> to get back to the original scale.
 </div>
+
