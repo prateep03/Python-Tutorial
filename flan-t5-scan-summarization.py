@@ -362,10 +362,10 @@ else:
 
 # %%
 
-import evaluate
-import nltk
+import evaluate #ignore: pylint: disable=import-error
+import nltk #ignore: pylint: disable=import-error
 import numpy as np
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize #ignore: pylint: disable=import-error
 nltk.download("punkt")
 
 # Metric
