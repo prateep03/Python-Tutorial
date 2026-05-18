@@ -52,7 +52,8 @@ from peft import prepare_model_for_kbit_training, LoraConfig, PeftModel, get_pef
 
 # %%
 
-MODEL_PATH = "/teamspace/studios/this_studio/hf-models/mistral/pytorch/7b-instruct-v0.1-hf/1"
+WORK_DIR = os.getenv("WORK_DIR", "/teamspace/studios/this_studio/finetuning-LLM-with-qlora")
+MODEL_PATH = os.path.join(WORK_DIR, "data/hf-models/mistral/pytorch/7b-instruct-v0.1-hf/1")
 
 # %%
 
@@ -97,7 +98,7 @@ tokenizer.pad_token = tokenizer.eos_token
 
 # %% 
 
-DATASET_PATH = "/teamspace/studios/this_studio/data/viggo-v1"
+DATASET_PATH = os.path.join(WORK_DIR, "data/viggo-v1")
 
 train_dataset = load_dataset(DATASET_PATH, split="train")
 eval_dataset = load_dataset(DATASET_PATH, split="validation")
