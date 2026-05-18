@@ -1,0 +1,4 @@
+[submodule "ragas"]
+	path = ragas
+	url = https://github.com/vibrantlabsai/ragas.git
+	ignore = all
