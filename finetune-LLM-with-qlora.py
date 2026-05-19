@@ -48,12 +48,13 @@ import transformers
 from datetime import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from datasets import load_dataset
+from accelerate import Accelerator
 from peft import prepare_model_for_kbit_training, LoraConfig, PeftModel, get_peft_model
 
 # %%
 
 WORK_DIR = os.getenv("WORK_DIR", "/teamspace/studios/this_studio/finetuning-LLM-with-qlora")
-MODEL_PATH = os.path.join(WORK_DIR, "data/hf-models/mistral/pytorch/7b-instruct-v0.1-hf/1")
+MODEL_DIR = os.path.join(WORK_DIR, "data/hf-models/mistral/pytorch/7b-instruct-v0.1-hf/1")
 
 # %%
 
@@ -83,10 +84,10 @@ bnb_config = BitsAndBytesConfig(
 
 # %%
 
-model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, 
+model = AutoModelForCausalLM.from_pretrained(MODEL_DIR, 
                                              quantization_config=bnb_config).to(device)
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH,
+tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR,
                                           model_max_length=512,
                                           padding_side="left",
                                           add_eos_token=True)
@@ -184,4 +185,140 @@ with torch.no_grad():
                                             skip_special_tokens=True))
     
 
+# %% [markdown]
+
+## Finetuning configuration
+
+# %% 
+
+model.gradient_checkpointing_enable()
+model = prepare_model_for_kbit_training(model)
+
+def print_trainable_parameters(model):
+    trainable_params = 0
+    all_param = 0
+    for _, param in model.named_parameters():
+        all_param += param.numel()
+        if param.requires_grad:
+            trainable_params += param.numel()
+    print(
+        f"Trainable parameters: {trainable_params} ({100 * trainable_params / all_param:.2f}%)"
+    )
+
 # %%
+
+config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head"],
+    bias="none",
+    lora_dropout=0.05, #Conventional
+    task_type="CAUSAL_LM"
+)
+
+model = get_peft_model(model, config)
+print_trainable_parameters(model)
+
+# %% [markdown]
+
+## Accelerator configuration
+
+# %%
+
+accelerator = Accelerator()
+model = accelerator.prepare(model)
+print_trainable_parameters(model)
+
+# %% [markdown]
+
+## Finetune the model
+
+# %%
+
+base_model_name = "mistral"
+run_name = f"{base_model_name}-finetuned-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
+# run_name = f"{base_model_name}-finetuned-2026-05-18-19-34-15"
+output_dir = os.path.join(MODEL_DIR, "outputs", run_name)
+
+tokenizer.pad_token = tokenizer.eos_token
+
+trainer = transformers.Trainer(
+    model=model,
+    train_dataset=tokenized_train_dataset,
+    eval_dataset=tokenized_eval_dataset,
+    args=transformers.TrainingArguments(
+        output_dir=output_dir,
+        warmup_steps=2,
+        per_device_train_batch_size=8,
+        gradient_accumulation_steps=4,
+        max_steps=600,
+        learning_rate=2e-4,
+        logging_steps=50,
+        fp16=True,
+        optim="paged_adamw_8bit",
+        logging_dir=os.path.join(output_dir, "logs"),
+        save_strategy="steps",
+        eval_steps=50,
+        do_eval=True,
+        report_to="none",
+        run_name=run_name,
+    ),
+    data_collator=transformers.DataCollatorForSeq2Seq(tokenizer, pad_to_multiple_of=8, return_tensors="pt")
+)
+
+model.config.use_cache = False # silence the warnings. Please re-enable for inference!
+trainer.train()
+
+# %% [markdown]
+
+## Load the trained base model
+
+# %% 
+
+base_model = AutoModelForCausalLM.from_pretrained(MODEL_DIR,
+                                                  quantization_config=bnb_config,
+                                                  device_map="auto",
+                                                  trust_remote_code=True)
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR,
+                                          padding_side="left",
+                                          add_eos_token=True,
+                                          trust_remote_code=True)
+
+tokenizer.pad_token = tokenizer.eos_token
+
+# %% [markdown]
+
+## Load the finetuned model
+
+print("==================================================================================================")
+print(f"Loading finetuned model from: " + os.path.join(MODEL_DIR, "outputs", run_name, "checkpoint-600"))
+
+# %% 
+
+ft_model = PeftModel.from_pretrained(base_model, model_id=os.path.join(MODEL_DIR, "outputs", run_name, "checkpoint-600")).to(device)
+ft_model.eval()
+
+# Normalize token id to a plain int to avoid Tensor typing/call issues.
+eos_or_pad_token_id = tokenizer.eos_token_id
+if isinstance(eos_or_pad_token_id, torch.Tensor):
+    eos_or_pad_token_id = int(eos_or_pad_token_id.item())
+elif eos_or_pad_token_id is None:
+    eos_or_pad_token_id = tokenizer.pad_token_id
+    
+if isinstance(tokenizer.pad_token_id, torch.Tensor):
+    tokenizer.pad_token_id = int(tokenizer.pad_token_id.item())
+
+with torch.no_grad():
+    output = ft_model.generate( #ignore: pylint: disable=E1120
+                input_ids=model_input.input_ids,
+                attention_mask=model_input.attention_mask,
+                max_new_tokens=256,
+                pad_token_id=int(eos_or_pad_token_id))
+            
+    print("Model output: " + tokenizer.decode(output[0], 
+                                            skip_special_tokens=True,
+                                            temperature=0.2,
+                                            repetition_penalty=1.5))
+    
+print("==================================================================================================")
