@@ -161,7 +161,7 @@ This function should describe the target string accurately and the function must
 ['inform', 'request', 'give_opinion', 'confirm', 'verify_attribute', 'suggest', 'request_explanation',
 'recommend', 'request_attribute'].
 The attributes must be one of the following: ['name', 'exp_release_date', 'release_year', 'developer',
-'esrb', 'rating', 'genres', 'player_perspecive', 'has_multiplayer', 'platforms', 'available_on_steam',
+'esrb', 'rating', 'genres', 'player_perspective', 'has_multiplayer', 'platforms', 'available_on_steam',
 'has_linux_release', 'has_mac_release', 'specifier']
 
 ### Target sentence:
@@ -180,9 +180,12 @@ with torch.no_grad():
         input_ids=model_input.input_ids,
         attention_mask=model_input.attention_mask,
         max_new_tokens=256,
+        do_sample=True,
         pad_token_id=tokenizer.eos_token_id)
     print("Model output: " + tokenizer.decode(output[0], 
-                                            skip_special_tokens=True))
+                                            skip_special_tokens=True,
+                                            temperature=0.2,
+                                            repetition_penalty=1.5))
     
 
 # %% [markdown]
@@ -225,8 +228,8 @@ print_trainable_parameters(model)
 
 # %%
 
-accelerator = Accelerator()
-model = accelerator.prepare(model)
+# accelerator = Accelerator()
+# model = accelerator.prepare(model)
 print_trainable_parameters(model)
 
 # %% [markdown]
@@ -298,6 +301,7 @@ print(f"Loading finetuned model from: " + os.path.join(MODEL_DIR, "outputs", run
 
 ft_model = PeftModel.from_pretrained(base_model, model_id=os.path.join(MODEL_DIR, "outputs", run_name, "checkpoint-600")).to(device)
 ft_model.eval()
+ft_model.config.use_cache = True # silence the warnings. Please disable for training!
 
 # Normalize token id to a plain int to avoid Tensor typing/call issues.
 eos_or_pad_token_id = tokenizer.eos_token_id
