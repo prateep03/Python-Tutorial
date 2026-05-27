@@ -6,8 +6,7 @@ Compare vLLM inference speed against the HuggingFace baseline.
 
 import os
 import time
-from utils import (OUTPUT_DIR, 
-                   MARKERS_DIR, 
+from utils import (MARKERS_DIR, 
                    configure_runtime)
 
 def main() -> None:
